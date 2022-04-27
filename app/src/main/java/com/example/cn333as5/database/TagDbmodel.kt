@@ -11,12 +11,12 @@ data class TagDbModel(
     @ColumnInfo(name = "nameTag") val nameTag: String
 ) {
     companion object {
-        val DEFAULT_COLORS = listOf(
+        val DEFAULT_TAGS = listOf(
             TagDbModel(1, ""),
             TagDbModel(2, "Home"),
             TagDbModel(3, "Work"),
             TagDbModel(4, "Mobile"),
         )
-        val DEFAULT_COLOR = DEFAULT_COLORS[0]
+        val DEFAULT_TAG = DEFAULT_TAGS[0]
     }
 }

@@ -19,20 +19,14 @@ fun Note(
     modifier: Modifier = Modifier,
     note: NoteModel,
     onNoteClick: (NoteModel) -> Unit = {},
-    onNoteCheckedChange: (NoteModel) -> Unit = {},
-    isSelected: Boolean
 ) {
-    val background = if (isSelected)
-        Color.LightGray
-    else
-        MaterialTheme.colors.surface
 
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = modifier
             .padding(8.dp)
             .fillMaxWidth(),
-        backgroundColor = background
+
     ) {
         ListItem(
             text = { Text(text = note.title, maxLines = 1) },
@@ -52,4 +46,3 @@ fun Note(
         )
     }
 }
-

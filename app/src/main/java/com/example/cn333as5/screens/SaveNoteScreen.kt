@@ -131,7 +131,7 @@ fun SaveNoteTopAppBar(
     TopAppBar(
         title = {
             Text(
-                text = "Save Note",
+                text = "Person",
                 color = MaterialTheme.colors.onPrimary
             )
         },
@@ -181,7 +181,7 @@ private fun SaveNoteContent(
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         ContentTextField(
-            label = "Title",
+            label = "Name",
             text = note.title,
             onTextChange = { newTitle ->
                 onNoteChange.invoke(note.copy(title = newTitle))
@@ -192,14 +192,12 @@ private fun SaveNoteContent(
             modifier = Modifier
                 .heightIn(max = 240.dp)
                 .padding(top = 16.dp),
-            label = "Body",
+            label = "Phone number",
             text = note.content,
             onTextChange = { newContent ->
                 onNoteChange.invoke(note.copy(content = newContent))
             }
         )
-
-
 
         PickedColor(color = note.color)
     }
@@ -223,28 +221,6 @@ private fun ContentTextField(
             backgroundColor = MaterialTheme.colors.surface
         )
     )
-}
-
-@Composable
-private fun NoteCheckOption(
-    isChecked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        Modifier
-            .padding(8.dp)
-            .padding(top = 16.dp)
-    ) {
-        Text(
-            text = "Can note be checked off?",
-            modifier = Modifier.weight(1f)
-        )
-        Switch(
-            checked = isChecked,
-            onCheckedChange = onCheckedChange,
-            modifier = Modifier.padding(start = 8.dp)
-        )
-    }
 }
 
 @Composable
@@ -321,28 +297,4 @@ fun ColorItem(
                 .align(Alignment.CenterVertically)
         )
     }
-}
-
-@Preview
-@Composable
-fun ColorItemPreview() {
-    ColorItem(ColorModel.DEFAULT) {}
-}
-
-@Preview
-@Composable
-fun ColorPickerPreview() {
-    ColorPicker(
-        colors = listOf(
-            ColorModel.DEFAULT,
-            ColorModel.DEFAULT,
-            ColorModel.DEFAULT
-        )
-    ) { }
-}
-
-@Preview
-@Composable
-fun PickedColorPreview() {
-    PickedColor(ColorModel.DEFAULT)
 }

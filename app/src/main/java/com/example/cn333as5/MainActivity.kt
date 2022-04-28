@@ -13,8 +13,6 @@ import com.example.cn333as5.routing.MyNotesRouter
 import com.example.cn333as5.routing.Screen
 import com.example.cn333as5.screens.NotesScreen
 import com.example.cn333as5.screens.SaveNoteScreen
-import com.example.cn333as5.ui.theme.MyNotesTheme
-import com.example.cn333as5.ui.theme.MyNotesThemeSettings
 import com.example.cn333as5.viewmodel.MainViewModel
 import com.example.cn333as5.viewmodel.MainViewModelFactory
 
@@ -23,12 +21,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyNotesTheme(darkTheme = MyNotesThemeSettings.isDarkThemeEnabled) {
                 val viewModel: MainViewModel = viewModel(
                     factory = MainViewModelFactory(LocalContext.current.applicationContext as Application)
                 )
                 MainActivityScreen(viewModel)
-            }
+
         }
     }
 }

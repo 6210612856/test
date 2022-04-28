@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.cn333as5.domain.model.ColorModel
 import com.example.cn333as5.domain.model.NoteModel
 import com.example.cn333as5.routing.Screen
 import com.example.cn333as5.ui.components.Note
@@ -52,9 +53,6 @@ fun NotesScreen(viewModel: MainViewModel) {
         if (notes.isNotEmpty()) {
             NotesList(
                 notes = notes,
-                onNoteCheckedChange = {
-                    viewModel.onNoteCheckedChange(it)
-                },
                 onNoteClick = { viewModel.onNoteClick(it) }
             )
         }
@@ -65,7 +63,6 @@ fun NotesScreen(viewModel: MainViewModel) {
 @Composable
 private fun NotesList(
     notes: List<NoteModel>,
-    onNoteCheckedChange: (NoteModel) -> Unit,
     onNoteClick: (NoteModel) -> Unit
 ) {
     LazyColumn {
@@ -74,9 +71,8 @@ private fun NotesList(
             Note(
                 note = note,
                 onNoteClick = onNoteClick,
-                onNoteCheckedChange = onNoteCheckedChange,
-                isSelected = false
             )
         }
     }
 }
+

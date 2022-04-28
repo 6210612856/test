@@ -3,14 +3,14 @@ package com.example.cn333as5.database
 import android.content.Context
 import androidx.room.*
 
-@Database(entities = [PhoneDbModel::class, ColorDbModel::class, TagDbModel::class], version = 1)
+@Database(entities = [NoteDbModel::class, ColorDbModel::class, TagDbModel::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun noteDao(): PhoneDao
+    abstract fun noteDao(): NoteDao
     abstract fun colorDao(): ColorDao
-    abstract fun TagDao(): TagDao
+    abstract fun tagDao(): TagDao
 
     companion object {
-        private const val DATABASE_NAME = "phone-book-database"
+        private const val DATABASE_NAME = "note-maker-database"
         private var INSTANCE: AppDatabase? = null
 
         fun getInstance(context: Context): AppDatabase {

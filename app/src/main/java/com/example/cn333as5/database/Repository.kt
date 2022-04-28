@@ -1,29 +1,27 @@
 package com.example.cn333as5.database
 
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.example.cn333as5.domain.model.ColorModel
-import com.example.cn333as5.domain.model.PhoneModel
+import com.example.cn333as5.domain.model.NoteModel
+import com.example.cn333as5.domain.model.TagModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class Repository(
-    private val phoneDao: PhoneDao,
-    private val tagDao: TagDao,
+    private val noteDao: NoteDao,
     private val colorDao: ColorDao,
+    private val tagDao: TagDao,
     private val dbMapper: DbMapper
 ) {
 
-    // Working Notes
     private val notesNotInTrashLiveData: MutableLiveData<List<NoteModel>> by lazy {
         MutableLiveData<List<NoteModel>>()
     }
 
     fun getAllNotesNotInTrash(): LiveData<List<NoteModel>> = notesNotInTrashLiveData
 
-    // Deleted Notes
     private val notesInTrashLiveData: MutableLiveData<List<NoteModel>> by lazy {
         MutableLiveData<List<NoteModel>>()
     }
@@ -34,9 +32,6 @@ class Repository(
         initDatabase(this::updateNotesLiveData)
     }
 
-    /**
-     * Populates database with colors if it is empty.
-     */
     private fun initDatabase(postInitAction: () -> Unit) {
         GlobalScope.launch {
             // Prepopulate colors
@@ -44,9 +39,16 @@ class Repository(
             val dbColors = colorDao.getAllSync()
             if (dbColors.isNullOrEmpty()) {
                 colorDao.insertAll(*colors)
+
             }
 
-            // Prepopulate notes
+            val tags = TagDbModel.DEFAULT_TAGS.toTypedArray()
+            val dbTags = tagDao.getAllSync()
+            if (dbTags.isNullOrEmpty()) {
+                tagDao.insertAll(*tags)
+
+            }
+
             val notes = NoteDbModel.DEFAULT_NOTES.toTypedArray()
             val dbNotes = noteDao.getAllSync()
             if (dbNotes.isNullOrEmpty()) {
@@ -60,9 +62,10 @@ class Repository(
     // get list of working notes or deleted notes
     private fun getAllNotesDependingOnTrashStateSync(inTrash: Boolean): List<NoteModel> {
         val colorDbModels: Map<Long, ColorDbModel> = colorDao.getAllSync().map { it.id to it }.toMap()
+        val tagDbModels: Map<Long, TagDbModel> = tagDao.getAllSync().map { it.id to it }.toMap()
         val dbNotes: List<NoteDbModel> =
             noteDao.getAllSync().filter { it.isInTrash == inTrash }
-        return dbMapper.mapNotes(dbNotes, colorDbModels)
+        return dbMapper.mapNotes(dbNotes, colorDbModels, tagDbModels)
     }
 
     fun insertNote(note: NoteModel) {
@@ -93,6 +96,9 @@ class Repository(
 
     fun getAllColors(): LiveData<List<ColorModel>> =
         Transformations.map(colorDao.getAll()) { dbMapper.mapColors(it) }
+
+    fun getAllTags(): LiveData<List<TagModel>> =
+        Transformations.map(tagDao.getAll()) { dbMapper.mapTags(it) }
 
     private fun updateNotesLiveData() {
         notesNotInTrashLiveData.postValue(getAllNotesDependingOnTrashStateSync(false))

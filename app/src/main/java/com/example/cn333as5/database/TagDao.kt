@@ -1,6 +1,5 @@
 package com.example.cn333as5.database
 
-
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
@@ -15,5 +14,5 @@ interface TagDao {
     fun getAllSync(): List<TagDbModel>
 
     @Insert
-    fun insertAll(vararg colorDbModels: TagDbModel)
+    fun insertAll(vararg tagDbModels: TagDbModel)
 }

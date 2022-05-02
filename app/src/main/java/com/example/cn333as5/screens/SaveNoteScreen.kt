@@ -27,9 +27,12 @@ import com.example.cn333as5.R
 import com.example.cn333as5.domain.model.ColorModel
 import com.example.cn333as5.domain.model.NEW_NOTE_ID
 import com.example.cn333as5.domain.model.NoteModel
+import com.example.cn333as5.domain.model.TagModel
 import com.example.cn333as5.ui.components.NoteColor
 import com.example.cn333as5.util.fromHex
 import kotlinx.coroutines.launch
+
+
 
 @ExperimentalMaterialApi
 @Composable
@@ -38,11 +41,15 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
 
     val colors: List<ColorModel> by viewModel.colors.observeAsState(listOf())
 
+    val tags: List<TagModel> by viewModel.tags.observeAsState(listOf())
+
     val bottomDrawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
 
     val coroutineScope = rememberCoroutineScope()
 
     val moveNoteToTrashDialogShownState = rememberSaveable { mutableStateOf(false) }
+
+    val check = rememberSaveable { mutableStateOf(false) }
 
     BackHandler {
         if (bottomDrawerState.isOpen) {
@@ -52,6 +59,7 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
         }
     }
 
+
     Scaffold(
         topBar = {
             val isEditingMode: Boolean = noteEntry.id != NEW_NOTE_ID
@@ -60,32 +68,71 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
                 onBackClick = { MyNotesRouter.navigateTo(Screen.Notes) },
                 onSaveNoteClick = { viewModel.saveNote(noteEntry) },
                 onOpenColorPickerClick = {
+                    check.value = true
                     coroutineScope.launch { bottomDrawerState.open() }
+
+                },
+                onOpenTagPickerClick = {
+                    check.value = false
+                    coroutineScope.launch { bottomDrawerState.open()}
+
                 },
                 onDeleteNoteClick = {
                     moveNoteToTrashDialogShownState.value = true
-                }
+                },
+
             )
         }
     ) {
-        BottomDrawer(
-            drawerState = bottomDrawerState,
-            drawerContent = {
-                ColorPicker(
-                    colors = colors,
-                    onColorSelect = { color ->
-                        viewModel.onNoteEntryChange(noteEntry.copy(color = color))
+
+//            BottomDrawer(
+//                drawerState = bottomDrawerState,
+//                drawerContent =  {TagPicker(
+//                    tags = tags,
+//                    onTagSelect = { tag ->
+//                        viewModel.onNoteEntryChange(noteEntry.copy(tag = tag))
+//                    })}
+//            )
+//
+//            {
+//                SaveNoteContent(
+//                    note = noteEntry,
+//                    onNoteChange = { updateNoteEntry ->
+//                        viewModel.onNoteEntryChange(updateNoteEntry)
+//                    }
+//                )
+//
+//            }
+            BottomDrawer(
+                drawerState = bottomDrawerState,
+                drawerContent = { if(check.value) {
+                    ColorPicker(
+                        colors = colors,
+                        onColorSelect = { color ->
+                            viewModel.onNoteEntryChange(noteEntry.copy(color = color))
+                        })}
+                    if(!check.value) {
+
+                    TagPicker(
+                        tags = tags,
+                        onTagSelect = { tag ->
+                            viewModel.onNoteEntryChange(noteEntry.copy(tag = tag))
+                        })}
+
+
+                }
+            )
+
+
+
+            {
+                SaveNoteContent(
+                    note = noteEntry,
+                    onNoteChange = { updateNoteEntry ->
+                        viewModel.onNoteEntryChange(updateNoteEntry)
                     }
                 )
             }
-        ) {
-            SaveNoteContent(
-                note = noteEntry,
-                onNoteChange = { updateNoteEntry ->
-                    viewModel.onNoteEntryChange(updateNoteEntry)
-                }
-            )
-        }
 
         if (moveNoteToTrashDialogShownState.value) {
             AlertDialog(
@@ -117,7 +164,10 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
                 }
             )
         }
+
+
     }
+
 }
 
 @Composable
@@ -126,7 +176,8 @@ fun SaveNoteTopAppBar(
     onBackClick: () -> Unit,
     onSaveNoteClick: () -> Unit,
     onOpenColorPickerClick: () -> Unit,
-    onDeleteNoteClick: () -> Unit
+    onOpenTagPickerClick: () -> Unit,
+    onDeleteNoteClick: () -> Unit,
 ) {
     TopAppBar(
         title = {
@@ -152,6 +203,13 @@ fun SaveNoteTopAppBar(
                     tint = MaterialTheme.colors.onPrimary
                 )
             }
+            IconButton(onClick = onOpenTagPickerClick,) {
+                Icon(
+                    painter = painterResource(id = R.drawable.sell24),
+                    contentDescription = "Save Note Button",
+                    tint = MaterialTheme.colors.onPrimary
+                )
+            }
             
             IconButton(onClick = onOpenColorPickerClick) {
                 Icon(
@@ -159,6 +217,7 @@ fun SaveNoteTopAppBar(
                     contentDescription = "Open Color Picker Button",
                     tint = MaterialTheme.colors.onPrimary
                 )
+
             }
 
             if (isEditingMode) {
@@ -200,6 +259,7 @@ private fun SaveNoteContent(
         )
 
         PickedColor(color = note.color)
+        PickedTag(tag = note.tag)
     }
 }
 
@@ -269,6 +329,7 @@ private fun ColorPicker(
     }
 }
 
+
 @Composable
 fun ColorItem(
     color: ColorModel,
@@ -291,6 +352,74 @@ fun ColorItem(
         )
         Text(
             text = color.name,
+            fontSize = 22.sp,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .align(Alignment.CenterVertically)
+        )
+    }
+}
+
+@Composable
+private fun TagPicker(
+    tags: List<TagModel>,
+    onTagSelect: (TagModel) -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = "Tag picker",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(8.dp)
+        )
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            items(tags.size) { itemIndex ->
+                val tag = tags[itemIndex]
+                TagItem(tag = tag, onTagSelect = onTagSelect)
+            }
+        }
+    }
+}
+
+@Composable
+fun TagItem(
+    tag: TagModel,
+    onTagSelect: (TagModel) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                onClick = {
+                    onTagSelect(tag)
+                }
+            )
+    ) {
+        Text(
+            text = tag.nameTag,
+            fontSize = 22.sp,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .align(Alignment.CenterVertically)
+        )
+    }
+}
+
+@Composable
+private fun PickedTag(tag: TagModel) {
+    Row(
+        Modifier
+            .padding(8.dp)
+            .padding(top = 16.dp)
+    ) {
+        Text(
+            text = "Picked tag",
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+        )
+        Text(
+            text = tag.nameTag,
             fontSize = 22.sp,
             modifier = Modifier
                 .padding(horizontal = 16.dp)

@@ -7,8 +7,8 @@ import androidx.room.Query
 
 @Dao
 interface NoteDao {
-
-    @Query("SELECT * FROM NoteDbModel")
+//SELECT * FROM TABLENAME order by COLUMNNAME asc
+    @Query("SELECT * FROM NoteDbModel ORDER by title asc")
     fun getAllSync(): List<NoteDbModel>
 
     @Query("SELECT * FROM NoteDbModel WHERE id IN (:noteIds)")

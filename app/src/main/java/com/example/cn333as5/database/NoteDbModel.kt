@@ -15,18 +15,10 @@ data class NoteDbModel(
 ) {
     companion object {
         val DEFAULT_NOTES = listOf(
-            NoteDbModel(1, "RW Meeting", "Prepare sample project",  1, 2,false),
-            NoteDbModel(2, "Bills", "Pay by tomorrow",  2, 2,false),
-            NoteDbModel(3, "Pancake recipe", "Milk, eggs, salt, flour...",  3, 2,false),
-            NoteDbModel(4, "Workout", "Running, push ups, pull ups, squats...", 4,2, false),
-            NoteDbModel(5, "Title 5", "Content 5",  5, 3,false),
-            NoteDbModel(6, "Title 6", "Content 6", 6, 3,false),
-            NoteDbModel(7, "Title 7", "Content 7", 7, 3,false),
-            NoteDbModel(8, "Title 8", "Content 8",  8, 3,false),
-            NoteDbModel(9, "Title 9", "Content 9",  9, 4,false),
-            NoteDbModel(10, "Title 10", "Content 10",  10, 4,false),
-            NoteDbModel(11, "Title 11", "Content 11",  11, 4,false),
-            NoteDbModel(12, "Title 12", "Content 12",  12, 4,false)
+            NoteDbModel(1, "Adam Smith", "0987887583",  1, 2,false),
+            NoteDbModel(2, "Bill Crimson", "0629341489",  2, 2,false),
+            NoteDbModel(3, "Pancake Ransom", "0921379421",  3, 2,false),
+            NoteDbModel(4, "Michael jackson", "0819320329", 4,2, false),
         )
     }
 }

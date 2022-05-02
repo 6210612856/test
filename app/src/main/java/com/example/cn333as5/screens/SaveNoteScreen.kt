@@ -1,6 +1,7 @@
 package com.example.cn333as5.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -180,6 +182,7 @@ fun SaveNoteTopAppBar(
     onDeleteNoteClick: () -> Unit,
 ) {
     TopAppBar(
+        backgroundColor = Color.DarkGray,
         title = {
             Text(
                 text = "Person",
@@ -292,13 +295,14 @@ private fun PickedColor(color: ColorModel) {
     ) {
         Text(
             text = "Picked color",
+            fontSize = 18.sp,
             modifier = Modifier
                 .weight(1f)
                 .align(Alignment.CenterVertically)
         )
         NoteColor(
             color = Color.fromHex(color.hex),
-            size = 40.dp,
+            size = 50.dp,
             border = 1.dp,
             modifier = Modifier.padding(4.dp)
         )
@@ -397,9 +401,9 @@ fun TagItem(
     ) {
         Text(
             text = tag.nameTag,
-            fontSize = 22.sp,
+            fontSize = 18.sp,
             modifier = Modifier
-                .padding(horizontal = 16.dp)
+                .padding(all = 6.dp)
                 .align(Alignment.CenterVertically)
         )
     }
@@ -410,17 +414,18 @@ private fun PickedTag(tag: TagModel) {
     Row(
         Modifier
             .padding(8.dp)
-            .padding(top = 16.dp)
+            .padding(top = 18.dp)
     ) {
         Text(
             text = "Picked tag",
+            fontSize = 18.sp,
             modifier = Modifier
                 .weight(1f)
                 .align(Alignment.CenterVertically)
         )
         Text(
             text = tag.nameTag,
-            fontSize = 22.sp,
+            fontSize = 18.sp,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .align(Alignment.CenterVertically)

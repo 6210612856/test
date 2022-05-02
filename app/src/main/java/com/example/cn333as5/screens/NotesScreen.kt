@@ -1,21 +1,20 @@
 package com.example.cn333as5.screens
 
+
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.cn333as5.domain.model.ColorModel
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+
+
 import com.example.cn333as5.domain.model.NoteModel
-import com.example.cn333as5.routing.Screen
 import com.example.cn333as5.ui.components.Note
 import com.example.cn333as5.viewmodel.MainViewModel
-import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
@@ -27,6 +26,7 @@ fun NotesScreen(viewModel: MainViewModel) {
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
+                backgroundColor = Color.DarkGray,
                 title = {
                     Text(
                         text = "Phone book",
@@ -39,6 +39,7 @@ fun NotesScreen(viewModel: MainViewModel) {
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             FloatingActionButton(
+                backgroundColor = Color.Black,
                 onClick = { viewModel.onCreateNewNoteClick() },
                 contentColor = MaterialTheme.colors.background,
                 content = {
